@@ -14,8 +14,24 @@
 #include <boost/random.hpp>
 #include <boost/nondet_random.hpp>
 //#define DEBUG
+
+// MIN/MAX and the LFS types come for free from glibc; on BSD/macOS they don't.
+#include <sys/param.h>
+#ifndef MIN
+#define MIN(a,b) ((a) < (b) ? (a) : (b))
+#endif
+#ifndef MAX
+#define MAX(a,b) ((a) > (b) ? (a) : (b))
+#endif
+#ifdef __APPLE__
+#include <sys/types.h>
+typedef off_t off64_t; // off_t is already 64-bit on macOS
+#endif
+
 using namespace std;
-#define SSTR( x ) static_cast< std::ostringstream & >( \
+// The cast target must be a const reference: since C++11 the rvalue-stream
+// operator<< returns an xvalue, which will not bind to a non-const lvalue ref.
+#define SSTR( x ) static_cast< const std::ostringstream & >( \
         ( std::ostringstream() << std::dec << x ) ).str()
 #define CACHEFRAMES 5
 #define HAVE_CONFIG

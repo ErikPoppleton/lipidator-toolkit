@@ -492,7 +492,9 @@ double AVGAPL=AVGA/AVGPL;
 
 AVGBEND/=contrib;
 AVGK/=contrib;
-Matrix3 box;
+// Qualified to disambiguate the toolkit's Matrix3 (minimath.hpp puts it in
+// namespace std) from Eigen's Matrix3<> alias template, added in newer Eigen.
+std::Matrix3 box;
 box=traj.GetBoxMat();
 triple dim;
 dim.x=box.row[0].x;
